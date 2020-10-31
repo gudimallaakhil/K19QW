@@ -1,0 +1,197 @@
+from tkinter import *
+from tkinter import messagebox
+import mysql.connector
+
+root = Tk()
+
+
+root.title('aditya')
+
+
+root.geometry('1000x1000')
+
+mydb = mysql.connector.connect(host="localhost", user="root", password="3786adi", database="Aditya")
+cursor = mydb.cursor()
+
+
+#cursor.execute("create database Aditya")
+
+
+#cursor.execute("create table gr3 (name varchar(100), password varchar(100), crime_type varchar(100), criminal_name varchar(100), fir varchar(1000), gender varchar(100), city varchar(100))")
+
+
+cursor.execute("show databases")
+
+for x in cursor:
+    print(x)
+cursor.close() 
+
+
+
+def Insert():
+      
+    name = e1.get()
+    password = e2.get();
+    crime_type = e3.get();
+    criminal_name = e4.get();
+    fir = e5.get();
+    gender = e6.get();
+    city = e7.get();
+    
+    if (name == "" or password == "" or crimetype == "" or vicname == "" or fir == "" or gender == "" or city == ""):
+       messagebox.showerror("incomplete data", "Enter all the sections")
+    else:
+       mydb = mysql.connector.connect(host="localhost", user="root", password="3786adi",database="Aditya")
+       cursor = mydb.cursor()
+        
+       cursor.execute("insert into gr3 values('"+ name +"','"+ password +"', '"+ crime_type +"', '"+ criminal_name +"', '"+ fir +"', '"+ gender +"', '"+ city +"')") 
+       cursor.execute("commit");
+       
+       e1.delete(0, 'end')
+       e2.delete(0, 'end'); 
+       e3.delete(0, 'end');
+       e4.delete(0, 'end');
+       e5.delete(0, 'end');
+       e6.delete(0, 'end');
+       e7.delete(0, 'end');
+        
+       messagebox.showinfo("Insert status", "Your response have been recorded"); 
+       mydb.close();
+        
+        
+        
+
+def Delete():
+    
+
+    if(e1.get() == ""):
+       messagebox.showerror("name is empty", "enter name to execute")
+    elif(e2.get() == ""):
+       messagebox.showerror("password is empty", "Enter password to execute")
+ 
+    else:
+            
+       mydb = mysql.connector.connect(host="localhost", user="root", password="3786adi",database="Aditya")
+       cursor = mydb.cursor()
+       cursor.execute(" delete from gr3 where name = '"+ e1.get() +"' AND password = '"+ e2.get() +"' ")
+    
+       cursor.execute("commit");
+    
+       e1.delete(0, 'end')
+       e2.delete(0, 'end'); 
+    
+       messagebox.showinfo("Delete status", "Deleted sucessfully");
+      
+       mydb.close();
+        
+        
+
+def Update():
+    
+    name = e1.get()
+    password = e2.get();
+    crime_type = e3.get();
+    criminal_name = e4.get();
+    fir = e5.get();
+    gender = e6.get();
+    city = e7.get();
+    
+    if (name == "" or password == "" or crimetype == "" or vicname == "" or fir == "" or gender == "" or city == ""):
+       messagebox.showerror("updating data", "Enter all the sections")
+    else:
+       mydb = mysql.connector.connect(host="localhost", user="root", password="3786adi",database="Aditya")
+       cursor = mydb.cursor()
+        
+       cursor.execute("update gr3 set crime_type='"+ crime_type +"', criminal_name='"+ criminal_name +"', fir='"+ fir +"', gender='"+ gender +"', city='"+ city +"' where name='"+ name +"' AND password='"+ password +"'") 
+       cursor.execute("commit");
+       
+       e1.delete(0, 'end')
+       e2.delete(0, 'end'); 
+       e3.delete(0, 'end');
+       e4.delete(0, 'end');
+       e5.delete(0, 'end');
+       e6.delete(0, 'end');
+       e7.delete(0, 'end');
+       
+       messagebox.showinfo("Upadate status", "Updated sucessfully"); 
+       mydb.close(); 
+        
+        
+def search():
+    
+    if(e1.get() == "" ):
+       messagebox.showerror("name is empty", "enter name to execute")
+    elif(e2.get() == ""):
+       messagebox.showerror("password is empty", "Enter password to execute")
+    
+    else:
+            
+         mydb = mysql.connector.connect(host="localhost", user="root", password="3786adi",database="Aditya")
+         cursor = mydb.cursor()
+         cursor.execute("select * from gr3 where name = '"+ e1.get() +"' ")
+         rows = cursor.fetchall()
+         
+        
+            
+         for row in rows:
+            e3.insert(0, row[2])
+            e4.insert(0, row[3])
+            e5.insert(0, row[4])
+            e6.insert(0, row[5])
+            e7.insert(0, row[6])
+         mydb.close();  
+    
+    
+    
+c = Canvas(root, bg="cadetblue1", width=1000, height=1000)
+id = c.create_text(500,130,text="CRIME INVESTIGATION", font="fixedsys 20", fill="tomato", activefill="brown1")
+c.pack()
+
+
+    
+name = Label(root, text="NAME",  bg="cadetblue1", fg="gray45", font="Helvetica 10 bold", cursor="tcross")
+name.place(x=370,y=150)
+e1 = Entry(root, textvariable=name, width=25)
+e1.place(x=480,y=150)
+      
+password = Label(root, text="PASSWORD",  bg="cadetblue1", fg="gray45", font="Helvetica 10 bold", cursor="tcross")
+password.place(x=370,y=180)
+e2 = Entry(root, textvariable=password, width=25, show='*')
+e2.place(x=480,y=180)
+        
+crimetype = Label(root, text="CRIME TYPE",  bg="cadetblue1", fg="gray45", font="Helvetica 10 bold", cursor="tcross")
+crimetype.place(x=370,y=240)
+e3 = Entry(root, textvariable=crimetype, width=25)
+e3.place(x=480,y=240)
+
+vicname = Label(root, text="CRIMINAL NAME",  bg="cadetblue1", fg="gray45", font="Helvetica 10 bold", cursor="tcross")
+vicname.place(x=370,y=210)
+e4 = Entry(root, textvariable=vicname, width=25)
+e4.place(x=480,y=210)
+        
+fir = Label(root, text="FIR",  bg="cadetblue1", fg="gray45", font="Helvetica 10 bold", cursor="tcross")
+fir.place(x=370,y=270)
+e5 = Entry(root, textvariable=fir, width=25)
+e5.place(x=480,y=270)
+    
+gender = Label(root, text="GENDER",  bg="cadetblue1", fg="gray45", font="Helvetica 10 bold", cursor="tcross")
+gender.place(x=370,y=300)
+e6 = Entry(root, textvariable=gender, width=25)
+e6.place(x=480,y=300)
+
+city = Label(root, text="CITY",  bg="cadetblue1", fg="gray45", font="Helvetica 10 bold", cursor="tcross")
+city.place(x=370,y=330)
+e7 = Entry(root, textvariable=city, width=25)
+e7.place(x=480,y=330)
+
+
+
+Button(root, text="Save entry", command = Insert, width=10).place(x=400,y=380)
+Button(root, text="Delete", command = Delete, bg='firebrick1', width = 10).place(x=400,y=410)
+Button(root, text="Update", command = Update, width=10).place(x=490,y=410)
+Button(root, text="Search", command = search, width=10).place(x=490,y=380)
+Button(root, text="QUIT", command=root.destroy, width=15, bg="ghost white", fg="red").place(x=868, y=785)
+
+
+
+root.mainloop()
